@@ -1,0 +1,1 @@
+﻿bcp "select top 10 * from rosas_hn.dbo.manager_task_detail with (nolock)" queryout "{fileName}" -c -t "|" -S 120.25.238.73 -U web -P pass@word1 -k
