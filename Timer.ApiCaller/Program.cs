@@ -15,7 +15,7 @@ namespace Timer.ApiCaller
     {
         private static void Main(string[] args)
         {
-            Console.Title = "自动接口调用器";
+            Console.Title = "接口调用器(请勿关闭)";
             Console.WriteLine("欢迎使用自动接口调用器，按[Esc]键可退出程序");
             AppSetting.LoggerRepository = LogManager.CreateRepository(Assembly.GetEntryAssembly(), typeof(log4net.Repository.Hierarchy.Hierarchy));
             XmlConfigurator.Configure(AppSetting.LoggerRepository, new FileInfo("log4net.config"));

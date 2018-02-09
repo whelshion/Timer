@@ -4,15 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Timer.ApiCaller.Utils;
+using Timer.WinService.Utils;
 
-namespace Timer.ApiCaller.Jobs
+namespace Timer.WinService.Jobs
 {
-    public class CallHttpGetJob : IJob
+    public class HttpGetJob : IJob
     {
-        private readonly ILog log = LogManager.GetLogger(AppSetting.LoggerRepository.Name, typeof(CallHttpGetJob));
-        public string Url { private get; set; }
-        public string Query { private get; set; }
+        private readonly ILog log = LogManager.GetLogger(typeof(HttpGetJob));
+        public string Url { get; private set; }
+        public string Query { get; private set; }
         public Task Execute(IJobExecutionContext context)
         {
             try
