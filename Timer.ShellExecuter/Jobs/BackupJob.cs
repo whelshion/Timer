@@ -38,7 +38,7 @@ namespace Timer.ShellExecuter.Jobs
                 string fileName = Path.Combine(OutFolder, string.Concat(FileName, DateTime.Now.ToString(FileFormat), ".", FileExt));
                 command = File.ReadAllTextAsync(BatPath).Result.Replace("{fileName}", fileName);
                 log.Info($"[命令]-- {command}");
-                var result = ExecBatCommand(p =>
+                var result = ExecShellCommand(p =>
                 {
                     p(command);
                     p("exit 0");
@@ -57,7 +57,7 @@ namespace Timer.ShellExecuter.Jobs
         /// 打开控制台执行拼接完成的批处理命令字符串
         /// </summary>
         /// <param name="inputAction">需要执行的命令委托方法：每次调用 <paramref name="inputAction"/> 中的参数都会执行一次</param>
-        private bool ExecBatCommand(Action<Action<string>> inputAction)
+        private bool ExecShellCommand(Action<Action<string>> inputAction)
         {
             bool result = false;
             Process pro = null;
