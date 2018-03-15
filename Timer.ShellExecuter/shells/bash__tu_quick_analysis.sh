@@ -1,0 +1,1 @@
+﻿bash {脚本名待补充} {ttime} {thour} {phone} {type1} {type3}

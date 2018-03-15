@@ -1,5 +1,6 @@
 ﻿using log4net;
 using log4net.Config;
+using Microsoft.Extensions.Configuration;
 using Quartz;
 using Quartz.Impl;
 using System;
@@ -16,6 +17,12 @@ namespace Timer.ShellExecuter
         {
             Console.Title = "自动执行Shell脚本";
             Console.WriteLine("欢迎使用Shell脚本执行器，按[Esc]键可退出程序");
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Environment.CurrentDirectory)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            AppSetting.Configuration = builder.Build();
+
             AppSetting.LoggerRepository = LogManager.CreateRepository(Assembly.GetEntryAssembly(), typeof(log4net.Repository.Hierarchy.Hierarchy));
             XmlConfigurator.Configure(AppSetting.LoggerRepository, new FileInfo("log4net.config"));
             RunProgram().GetAwaiter().GetResult();
