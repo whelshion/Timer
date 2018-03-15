@@ -27,7 +27,7 @@ namespace Timer.ShellExecuter.Jobs
 
         public Task Execute(IJobExecutionContext context)
         {
-            log.Info($"新周期触发，线程id({Thread.CurrentThread.ManagedThreadId})*************************************************");
+            log.Info($"新周期触发(线程ID:{Thread.CurrentThread.ManagedThreadId})*************************************************");
             var dataMap = context.MergedJobDataMap;
 
             ScriptPath = dataMap.GetString("shell-script-path");
@@ -73,27 +73,30 @@ namespace Timer.ShellExecuter.Jobs
                             if (reader.HasRows)
                             {
                                 long? task_detail_id = null;
+                                string arguments = string.Empty;
                                 while (reader.Read())
                                 {
                                     int i = 0;
                                     task_detail_id = reader.GetInt64(i++);
-                                    command = File.ReadAllTextAsync(ScriptPath).Result
-                                        .Replace("{ttime}", reader.GetString(i++))
-                                        .Replace("{thour}", reader.GetString(i++))
-                                        .Replace("{phone}", reader.GetString(i++))
-                                        .Replace("{type1}", reader.GetString(i++))
-                                        .Replace("{type3}", reader.GetString(i++))
-                                        ;
+                                    //command = File.ReadAllTextAsync(ScriptPath).Result
+                                    //    .Replace("{ttime}", reader.GetString(i++))
+                                    //    .Replace("{thour}", reader.GetString(i++))
+                                    //    .Replace("{phone}", reader.GetString(i++))
+                                    //    .Replace("{type1}", reader.GetString(i++))
+                                    //    .Replace("{type3}", reader.GetString(i++))
+                                    //    ;
+                                    arguments = $"{reader.GetString(i++)} {reader.GetString(i++)} {reader.GetString(i++)} {reader.GetString(i++)} {reader.GetString(i++)}";
                                     break;
                                 }
                                 conn.Close();
 
                                 log.Info($"[命令]-- {command}");
-                                var result = ExecShellCommand(p =>
-                                {
-                                    p(command);
-                                    p("exit 0");
-                                });
+                                //var result = ExecShellCommand(p =>
+                                //{
+                                //    p(command);
+                                //    p("exit 0");
+                                //});
+                                var result = ExecuteCommand(ShellName, arguments, null);
                                 string message = result ? "成功" : "失败";
                                 log.Info($@"[结果]-- {message}");
 
@@ -134,7 +137,7 @@ namespace Timer.ShellExecuter.Jobs
                     IsActive = false;
                 }
             }
-            log.Info($"周期结束，线程id({Thread.CurrentThread.ManagedThreadId})*************************************************)");
+            log.Info($"周期结束(线程ID:{Thread.CurrentThread.ManagedThreadId})*************************************************)");
             return TaskUtil.CompletedTask;
         }
 
@@ -189,5 +192,64 @@ namespace Timer.ShellExecuter.Jobs
             }
             return result;
         }
+
+        public bool ExecuteCommand(string filename, string arguments, string workingDirectory, bool wait = true)
+        {
+            bool result = true;
+            try
+            {
+                log.Info("ExecuteCommand:" + filename + " " + arguments);
+                using (System.Diagnostics.Process process = new System.Diagnostics.Process())
+                {
+                    process.StartInfo.FileName = filename;
+                    process.StartInfo.Arguments = arguments;
+                    process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.RedirectStandardError = true;
+                    process.StartInfo.RedirectStandardInput = true;
+                    process.StartInfo.UseShellExecute = false;
+                    if (workingDirectory != null)
+                    {
+                        process.StartInfo.WorkingDirectory = workingDirectory;
+                    }
+                    process.StartInfo.CreateNoWindow = true;
+                    process.OutputDataReceived += (sender, e) =>
+                    {
+                        if (e.Data != null)
+                        {
+                            //if (filename != YARNCmd)
+                            {
+                                log.Info(e.Data);
+                            }
+                        }
+                    };
+
+                    process.ErrorDataReceived += (sender, e) =>
+                    {
+                        if (e.Data != null)
+                        {
+                            //if (filename != YARNCmd)
+                            {
+                                log.Info(e.Data);
+                            }
+                        }
+                    };
+
+                    process.Start();
+                    process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
+                    if (wait)
+                    {
+                        process.WaitForExit();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result = false;
+                throw ex;
+            }
+            return result;
+        }
+
     }
 }
