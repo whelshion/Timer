@@ -16,7 +16,7 @@ namespace Timer.ShellExecuter.Jobs
 {
     public class TUQuickAnalysisJob : IJob
     {
-        private static readonly ILog log = LogManager.GetLogger(AppSetting.LoggerRepository.Name, typeof(BackupJob));
+        private static readonly ILog log = LogManager.GetLogger(AppSetting.LoggerRepository.Name, typeof(TUQuickAnalysisJob));
 
         public static bool IsActive { get; set; }
         public string ScriptPath { get; private set; }
@@ -24,6 +24,8 @@ namespace Timer.ShellExecuter.Jobs
         public string DbConnString { get; private set; }
         public string ShellName { get; private set; }
         public string NoticeApi { get; private set; }
+        public string NoticeApi2 { get; private set; }
+        public string AfterShellSql { get; private set; }
 
         public Task Execute(IJobExecutionContext context)
         {
@@ -35,6 +37,8 @@ namespace Timer.ShellExecuter.Jobs
             DbType = dataMap.GetString("db-type") ?? "MySql";
             DbConnString = dataMap.GetString("conn-string") ?? "";
             NoticeApi = dataMap.GetString("notice-api") ?? "";
+            NoticeApi2 = dataMap.GetString("notice-api-2") ?? "";
+            AfterShellSql = dataMap.GetString("after-shell-sql") ?? "";
 
             if (IsActive)
             {
@@ -45,6 +49,7 @@ namespace Timer.ShellExecuter.Jobs
                 IsActive = true;
                 string command = string.Empty;
                 string querySql;
+                long? task_detail_id = 0;
                 try
                 {
                     DbConnection conn;
@@ -72,12 +77,12 @@ namespace Timer.ShellExecuter.Jobs
                             var reader = cmd.ExecuteReader();
                             if (reader.HasRows)
                             {
-                                long? task_detail_id = null;
                                 string arguments = string.Empty;
+
                                 while (reader.Read())
                                 {
                                     int i = 0;
-                                    task_detail_id = reader.GetInt64(i++);
+                                    task_detail_id = reader.GetInt64(0);
                                     //command = File.ReadAllTextAsync(ScriptPath).Result
                                     //    .Replace("{ttime}", reader.GetString(i++))
                                     //    .Replace("{thour}", reader.GetString(i++))
@@ -85,20 +90,41 @@ namespace Timer.ShellExecuter.Jobs
                                     //    .Replace("{type1}", reader.GetString(i++))
                                     //    .Replace("{type3}", reader.GetString(i++))
                                     //    ;
-                                    arguments = $"{reader.GetString(i++)} {reader.GetString(i++)} {reader.GetString(i++)} {reader.GetString(i++)} {reader.GetString(i++)}";
+                                    string type3 = reader.GetString(5);
+                                    int type3Value = type3.Contains("未接通") ? 1 :
+                                        type3.Contains("掉话") ? 2 :
+                                        type3.Contains("切换失败") ? 3 :
+                                        throw new ArgumentException($"TYPE3不在范围内:{type3}");
+
+                                    log.Info($"查询到工单:{reader.GetString(0)} {reader.GetString(1)} {reader.GetString(2)} {reader.GetString(3)} {reader.GetString(4)} {type3}");
+                                    arguments = $"{ShellName} {reader.GetString(1)} {reader.GetString(2)} {reader.GetString(3)} {reader.GetString(4)} {type3Value}";
                                     break;
                                 }
                                 conn.Close();
 
-                                log.Info($"[命令]-- {command}");
                                 //var result = ExecShellCommand(p =>
                                 //{
                                 //    p(command);
                                 //    p("exit 0");
                                 //});
-                                var result = ExecuteCommand(ShellName, arguments, null);
-                                string message = result ? "成功" : "失败";
-                                log.Info($@"[结果]-- {message}");
+                                var result = ExecuteCommand("/bin/bash", arguments, null);
+                                //string message = result ? "成功" : "失败";
+                                //log.Info($@"[SHELL结果]-- {message}");
+
+                                log.Info($"[AfterShellSql:]-- {AfterShellSql}");
+                                if (!string.IsNullOrEmpty(AfterShellSql))
+                                {
+                                    conn.Open();
+                                    cmd.CommandText = AfterShellSql;
+                                    try
+                                    {
+                                        log.Info(cmd.ExecuteNonQuery());
+                                    }
+                                    catch { }
+                                    conn.Close();
+                                }
+
+                                HttpUtil.HttpGet(NoticeApi2 + $"?task_detail_id={task_detail_id}", timeout: 60);
 
                                 while (true)
                                 {
@@ -109,10 +135,10 @@ namespace Timer.ShellExecuter.Jobs
                                     if (analysisResult != "1001")
                                     {
                                         IsActive = false;
-                                        log.Info("通知专家系统:" + HttpUtil.HttpGet(NoticeApi, timeout: 60));
+                                        log.Info("通知专家系统:" + HttpUtil.HttpGet(NoticeApi + $"?id={task_detail_id}", timeout: 60));
                                         break;
                                     }
-                                    Thread.Sleep(30 * 1000);
+                                    Thread.Sleep(1000);
                                 }
                             }
                         }
@@ -123,9 +149,9 @@ namespace Timer.ShellExecuter.Jobs
                         finally
                         {
                             conn.Close();
-                            log.Info("通知专家系统:" + HttpUtil.HttpGet(NoticeApi, timeout: 60));
+                            log.Info("通知专家系统:" + HttpUtil.HttpGet(NoticeApi + $"?id={task_detail_id}", timeout: 60));
                         }
-                        Thread.Sleep(5000);//测试存在执行中任务
+                        //Thread.Sleep(10*1000);//测试存在执行中任务
                     }
                 }
                 catch (Exception ex)
