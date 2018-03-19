@@ -1,0 +1,35 @@
+﻿@model Timer.Web.Core.Models.SchedulerVM
+
+@{
+    ViewData["Title"] = "调度器详情";
+}
+
+<h2>调度器 <small>@Model.SchedulerName</small></h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SchedulerInstanceId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SchedulerInstanceId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SchedulerName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SchedulerName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("编辑", "Edit", Model) |
+    <a asp-action="Index">返回列表</a>
+</div>

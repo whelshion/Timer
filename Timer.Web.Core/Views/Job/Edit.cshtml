@@ -1,0 +1,70 @@
+﻿@model Timer.Web.Core.Models.JobDetailVM
+
+@{
+    ViewData["Title"] = "编辑任务";
+    var jobTypes = ViewData["job_type"] as IEnumerable<JobTypeVM>;
+}
+
+<h2>任务 <small>@(Model.JobName ?? "新任务")</small></h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditAsync" method="post">
+            @*<div asp-validation-summary="All" class="text-danger"></div>*@
+            <div class="form-group">
+                <label asp-for="SchedulerName" class="control-label"></label>
+                <input asp-for="SchedulerName" class="form-control" readonly />
+                <span asp-validation-for="SchedulerName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JobGroup" class="control-label"></label>
+                <input asp-for="JobGroup" class="form-control" />
+                <span asp-validation-for="JobGroup" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JobName" class="control-label"></label>
+                <input asp-for="JobName" class="form-control" />
+                <span asp-validation-for="JobName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JobType" class="control-label"></label>
+                <select asp-for="JobType" class="form-control">
+                    @foreach (var item in jobTypes)
+                    {
+                        var jobDesc = string.IsNullOrWhiteSpace(item.Description) ? item.FullName : item.Description;
+                        <option value="@item.FullName">@jobDesc</option>
+                    }
+                </select>
+                <span asp-validation-for="JobType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="RequestsRecovery" /> @Html.DisplayNameFor(model => model.RequestsRecovery)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="ConcurrentExecutionDisallowed" /> 覆盖
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="确定" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">返回</a>
+</div>
+

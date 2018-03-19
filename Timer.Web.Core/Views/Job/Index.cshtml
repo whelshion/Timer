@@ -1,0 +1,56 @@
+﻿@model IDictionary<SchedulerVM, IEnumerable<JobDetailVM>>
+
+@{
+    ViewData["Title"] = "任务";
+    IDictionary<string, string> editRouteData = new Dictionary<string, string> { { "schedulerName", "" } };
+    IDictionary<string, string> detailRouteData = new Dictionary<string, string> { { "schedulerName", "" }, { "jobGroup", "" }, { "jobName", "" } };
+}
+<h2>任务 <small>列表</small></h2>
+
+@foreach (var item in Model)
+{
+    int i = 0;
+    editRouteData["schedulerName"] = item.Key.SchedulerName;
+    detailRouteData["schedulerName"] = item.Key.SchedulerName;
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+            <span>@item.Key.SchedulerName</span>
+            <a data-toggle="tooltip" data-placement="auto top" title="添加任务" asp-action="Edit" asp-all-route-data="editRouteData"><span class="glyphicon glyphicon-plus-sign"></span></a>
+        </div>
+
+        <!-- Table -->
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>任务名称</th>
+                    <th>组名称</th>
+                    @*<th>下次触发时刻</th>*@
+                    <th>任务描述</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var job in item.Value)
+                {
+                    detailRouteData["jobGroup"] = job.JobGroup;
+                    detailRouteData["jobName"] = job.JobName;
+
+                    string title = string.Join("<br />", job.JobDataMap.Select(o => $"{o.Key}:{o.Value}"));
+                    //string arrow = ++i > 5 ? "top" : "bottom";
+                    if (string.IsNullOrWhiteSpace(title))
+                    {
+                        title = "没有配置任务数据";
+                    }
+                    <tr>
+                        <td><span data-toggle="tooltip" data-placement="auto top" title="@title" data-html="true">@job.JobName</span></td>
+                        <td>@job.JobGroup</td>
+                        @*<td>@job.NextFireTimeUtc.GetValueOrDefault().ToString("yyyy-MM-dd HH:mm:ss")</td>*@
+                        <td>@job.Description</td>
+                        <td><a data-toggle="tooltip" data-placement="auto top" title="详情" asp-action="Detail" asp-all-route-data="detailRouteData"><span class="glyphicon glyphicon-forward"></span></a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

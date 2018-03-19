@@ -1,0 +1,86 @@
+﻿@model Timer.Web.Core.Models.JobDetailVM
+
+@{
+    ViewData["Title"] = "任务详情";
+    var jobRouteData = new Dictionary<string, string> { { "schedulerName", Model.SchedulerName }, { "jobGroup", Model.JobGroup }, { "jobName", Model.JobName } };
+}
+
+<h2>任务 <small>@Model.JobName/@Model.JobGroup/@Model.SchedulerName</small></h2>
+
+<div>
+    <button type="button" class="btn btn-info btn-xs" onclick="location.href='@Url.Action("PauseAsync",jobRouteData)'">暂停</button>
+    <button type="button" class="btn btn-success btn-xs" onclick="location.href='@Url.Action("ResumeAsync",jobRouteData)'">恢复</button>
+    <button type="button" class="btn btn-primary btn-xs" onclick="location.href='@Url.Action("TriggerAsync",jobRouteData)'">触发</button>
+    <button type="button" class="btn btn-danger btn-xs" onclick="location.href='@Url.Action("DeleteAsync",jobRouteData)'">删除</button>
+    <button type="button" data-toggle="tooltip" data-placement="auto top" title="中断所有执行中的当前任务" class="btn btn-warning btn-xs" onclick="location.href='@Url.Action("InterruptAsync",jobRouteData)'">中断</button>
+</div>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SchedulerName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SchedulerName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.JobGroup)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.JobGroup)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.JobName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.JobName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.JobType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.JobType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Durable)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Durable)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.RequestsRecovery)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RequestsRecovery)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PersistJobDataAfterExecution)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PersistJobDataAfterExecution)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ConcurrentExecutionDisallowed)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ConcurrentExecutionDisallowed)
+        </dd>
+        @*<dt>
+            @Html.DisplayNameFor(model => model.NextFireTimeUtc)
+        </dt>
+        <dd>
+            @Model.NextFireTimeUtc?.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")
+        </dd>*@
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("编辑", "Edit", Model) |
+    <a asp-action="Index">返回列表</a>
+</div>

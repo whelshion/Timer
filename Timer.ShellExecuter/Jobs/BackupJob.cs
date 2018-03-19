@@ -6,9 +6,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Timer.ShellExecuter.Utils;
+using Timer.MvcCore.Utils;
 
-namespace Timer.ShellExecuter.Jobs
+namespace Timer.MvcCore.Jobs
 {
     public class BackupJob : IJob
     {

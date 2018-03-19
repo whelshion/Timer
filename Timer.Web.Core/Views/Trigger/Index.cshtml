@@ -1,0 +1,73 @@
+﻿@model IDictionary<SchedulerVM, IEnumerable<TriggerDetailVM>>
+@{
+    ViewData["Title"] = "触发器";
+    IDictionary<string, string> editRouteData = new Dictionary<string, string> { { "schedulerName", "" } };
+    IDictionary<string, string> detailRouteData = new Dictionary<string, string> { { "schedulerName", "" }, { "triggerGroup", "" }, { "triggerName", "" } };
+}
+<h2>触发器 <small>列表</small></h2>
+
+@foreach (var item in Model)
+{
+    int i = 0;
+    editRouteData["schedulerName"] = item.Key.SchedulerName;
+    detailRouteData["schedulerName"] = item.Key.SchedulerName;
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+            <span>@item.Key.SchedulerName</span>
+            <a data-toggle="tooltip" data-placement="auto top" title="添加触发器" asp-action="Edit" asp-all-route-data="editRouteData"><span class="glyphicon glyphicon-plus-sign"></span></a>
+        </div>
+
+        <!-- Table -->
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>名称</th>
+                    <th>组名称</th>
+                    <th>优先级</th>
+                    <th>日历名称</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>后续触发</th>
+                    <th>说明</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var trigger in item.Value)
+                {
+                    detailRouteData["triggerGroup"] = trigger.Group;
+                    detailRouteData["triggerName"] = trigger.Name;
+                    string nextTime = trigger.NextFireTimes.FirstOrDefault().ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss");
+                    string title = string.Join("<br />", trigger.NextFireTimes.Select(o => $"{o.ToLocalTime():yyyy-MM-dd HH:mm:ss}"));
+                    //string arrow = ++i > 5 ? "top" : "bottom";
+                    if (string.IsNullOrWhiteSpace(title))
+                    {
+                        title = "无更多触发时间点";
+                    }
+                    <tr>
+                        <td>@trigger.Name</td>
+                        <td>@trigger.Group</td>
+                        <td>@trigger.Priority</td>
+                        <td>@trigger.CalendarName</td>
+                        <td>@trigger.StartTimeUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@trigger.EndTimeUtc?.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td><span data-toggle="tooltip" data-placement="auto top" title="@title" data-html="true">@nextTime</span></td>
+                        <td>@trigger.Description</td>
+                        <td>
+                            <a data-toggle="tooltip" data-placement="auto top" title="恢复" asp-action="ResumeAsync" asp-all-route-data="detailRouteData">
+                                <span class="glyphicon glyphicon-play"></span>
+                            </a>
+                            <a data-toggle="tooltip" data-placement="auto top" title="暂停" asp-action="PauseAsync" asp-all-route-data="detailRouteData">
+                                <span class="glyphicon glyphicon-pause"></span>
+                            </a>
+                            <a data-toggle="tooltip" data-placement="auto top" title="详情" asp-action="Detail" asp-all-route-data="detailRouteData">
+                                <span class="glyphicon glyphicon-forward"></span>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

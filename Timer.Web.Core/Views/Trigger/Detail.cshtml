@@ -1,0 +1,71 @@
+﻿@model Timer.Web.Core.Models.TriggerDetailVM
+
+@{
+    ViewData["Title"] = "Detail";
+}
+
+<h2>触发器 <small>@Model.Name/@Model.Group/@Model.SchedulerName</small></h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SchedulerName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SchedulerName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Group)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Group)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TriggerType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TriggerType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Priority)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Priority)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CalendarName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CalendarName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.StartTimeUtc)
+        </dt>
+        <dd>
+            @Model.StartTimeUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EndTimeUtc)
+        </dt>
+        <dd>
+            @Model.EndTimeUtc?.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("编辑", "Edit", new { schedulerName = Model.SchedulerName }) |
+    <a asp-action="Index">返回列表</a>
+</div>

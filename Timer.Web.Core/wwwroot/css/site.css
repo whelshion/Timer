@@ -1,0 +1,115 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Carousel */
+.carousel-caption p {
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+/* Make .svg files in the carousel display properly in older browsers */
+.carousel-inner .item img[src$=".svg"] {
+    width: 100%;
+}
+
+/* QR code generator */
+#qrCode {
+    margin: 15px;
+}
+
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+    /* Hide captions */
+    .carousel-caption {
+        display: none;
+    }
+}
+
+/*
+        * Callouts
+        *
+        * Not quite alerts, but custom and helpful notes for folks reading the docs.
+        * Requires a base and modifier class.
+        */
+
+/* Common styles for all types */
+.bs-callout {
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+}
+
+    .bs-callout:after {
+        content: '';
+        clear: both;
+        display: block;
+        width: 0;
+        height: 0;
+        visibility: hidden;
+    }
+
+    .bs-callout h4 {
+        margin-top: 0;
+        margin-bottom: 5px;
+    }
+
+    .bs-callout p:last-child {
+        margin-bottom: 0;
+    }
+
+    .bs-callout .pull-right {
+        margin-right: 10px;
+    }
+
+    .bs-callout code {
+        border-radius: 3px;
+    }
+
+    /* Tighten up space between multiple callouts */
+    .bs-callout + .bs-callout {
+        margin-top: -5px;
+    }
+
+/* Variations */
+.bs-callout-success {
+    border-left-color: #087e2f;
+}
+
+    .bs-callout-success h4 {
+        color: #087e2f;
+    }
+
+.bs-callout-danger {
+    border-left-color: #ce4844;
+}
+
+    .bs-callout-danger h4 {
+        color: #ce4844;
+    }
+
+.bs-callout-warning {
+    border-left-color: #aa6708;
+}
+
+    .bs-callout-warning h4 {
+        color: #aa6708;
+    }
+
+.bs-callout-info {
+    border-left-color: #1b809e;
+}
+
+    .bs-callout-info h4 {
+        color: #1b809e;
+    }

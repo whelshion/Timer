@@ -1,0 +1,49 @@
+﻿@model IEnumerable<SchedulerVM>
+
+@{
+    ViewData["Title"] = "调度器";
+    var detailRouteData = new Dictionary<string, string> { { "schedulerName", "" }, { "delaySeconds", null } };
+}
+<h2>调度器 <small>列表</small></h2>
+
+@if (Model != null && Model.Any())
+{
+    foreach (var item in Model)
+    {
+        detailRouteData["schedulerName"] = item.SchedulerName;
+
+        string status = "&nbsp;";
+        string cssClass = "";
+        switch (item.Status)
+        {
+            case SchedulerStatus.Shutdown:
+                status = "关闭";
+                cssClass = "danger";
+                break;
+            case SchedulerStatus.Standby:
+                status = "搁置";
+                cssClass = "info";
+                break;
+            case SchedulerStatus.Running:
+                status = "启动";
+                cssClass = "success";
+                break;
+            case SchedulerStatus.Unknown:
+            default:
+                status = "未知";
+                cssClass = "warning";
+                break;
+        }
+<div class="bs-callout bs-callout-@cssClass">
+    <h4>@item.SchedulerName</h4>
+    <p class="pull-left">@status</p>
+    <p class="pull-right"><a data-toggle="tooltip" data-placement="auto top" title="详情" asp-action="Detail" asp-all-route-data="detailRouteData"><span class="glyphicon glyphicon-forward"></span></a></p>
+    @*<p class="pull-right"><a data-toggle="tooltip" data-placement="auto top" title="清除" asp-action="ClearAsync" asp-all-route-data="detailRouteData"><span class="glyphicon glyphicon-forward"></span></a></p>
+        <p class="pull-right"><a data-toggle="tooltip" data-placement="auto top" title="关闭" asp-action="ShutdownAsync" asp-all-route-data="detailRouteData"><span class="glyphicon glyphicon-forward"></span></a></p>*@
+    <p class="pull-right" style="display:@(item.Status==SchedulerStatus.Standby?"none":"block")"><a data-toggle="tooltip" data-placement="auto top" title="搁置" asp-action="StandbyAsync" asp-all-route-data="detailRouteData"><span class="glyphicon glyphicon-pause"></span></a></p>
+    <p class="pull-right" style="display:@(item.Status==SchedulerStatus.Running?"none":"block")"><a data-toggle="tooltip" data-placement="auto top" title="启动" asp-action="StartAsync" asp-all-route-data="detailRouteData"><span class="glyphicon glyphicon-play"></span></a></p>
+</div>
+    }
+}
+
+
