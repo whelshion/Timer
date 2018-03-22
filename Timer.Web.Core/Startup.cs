@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using log4net;
+using log4net.Config;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -36,9 +38,8 @@ namespace Timer.Web.Core
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            Job.Utils.JdllUtil.Init("log4net.config");
-
-
+            AppUtil.LoggerRepository = LogManager.CreateRepository(Assembly.GetEntryAssembly(), typeof(log4net.Repository.Hierarchy.Hierarchy));
+            XmlConfigurator.Configure(AppUtil.LoggerRepository, new System.IO.FileInfo("log4net.config"));
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
@@ -55,8 +56,6 @@ namespace Timer.Web.Core
             //{
             //    routes.MapHub<LiveLogHub>("/live");
             //});
-
-            app.UseCors(builder => builder.AllowAnyMethod().AllowAnyHeader().AllowCredentials());
 
             app.UseMvc(routes =>
             {
@@ -86,10 +85,10 @@ namespace Timer.Web.Core
             ISchedulerFactory sf = new StdSchedulerFactory(properties);
             IScheduler scheduler = sf.GetScheduler().Result;
 
-            var liveLogPlugin = new LiveLogPlugin();
-            scheduler.ListenerManager.AddJobListener(liveLogPlugin);
-            scheduler.ListenerManager.AddTriggerListener(liveLogPlugin);
-            scheduler.ListenerManager.AddSchedulerListener(liveLogPlugin);
+            //var liveLogPlugin = new LiveLogPlugin();
+            //scheduler.ListenerManager.AddJobListener(liveLogPlugin);
+            //scheduler.ListenerManager.AddTriggerListener(liveLogPlugin);
+            //scheduler.ListenerManager.AddSchedulerListener(liveLogPlugin);
 
             scheduler.AddCalendar(typeof(AnnualCalendar).Name, new AnnualCalendar(), false, false);
             scheduler.AddCalendar(typeof(CronCalendar).Name, new CronCalendar("0 0/5 * * * ?"), false, false);

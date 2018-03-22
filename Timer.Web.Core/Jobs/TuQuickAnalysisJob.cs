@@ -8,9 +8,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using Quartz;
-using Timer.Job.Utils;
+using Timer.Web.Core.Utils;
 
-namespace Timer.Job.Jobs
+namespace Timer.Web.Core.Jobs
 {
     [Description("TOP用户快速分析任务")]
     public class TuQuickAnalysisJob : BaseJob
@@ -134,7 +134,7 @@ namespace Timer.Job.Jobs
                         }
                         catch (Exception ex)
                         {
-                            Logger.ErrorException(ex.Message, ex);
+                            Logger.Error(ex);
                         }
                         finally
                         {
@@ -146,14 +146,14 @@ namespace Timer.Job.Jobs
                 }
                 catch (Exception ex)
                 {
-                    Logger.ErrorException(ex.Message, ex);
+                    Logger.Error(ex);
                 }
                 finally
                 {
                     IsActive = false;
                 }
             }
-            Logger.Info($"******************************周期结束(线程ID:{Thread.CurrentThread.ManagedThreadId})******************************)");
+            Logger.Info($"******************************周期结束(线程ID:{Thread.CurrentThread.ManagedThreadId})******************************");
             return TaskUtil.CompletedTask;
         }
     }

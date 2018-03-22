@@ -40,7 +40,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Scope = "member", Target = "Quartz.Wev.Core.Logger.#Invoke(Quartz.Logging.LogLevel,System.Func`1<System.String>,System.Exception,System.Object[])")]
+[assembly: SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Scope = "member", Target = "Quartz.Web.Core.Logger.#Invoke(Quartz.Logging.LogLevel,System.Func`1<System.String>,System.Exception,System.Object[])")]
 
 // If you copied this file manually, you need to change all "YourRootNameSpace" so not to clash with other libraries
 // that use LibLog

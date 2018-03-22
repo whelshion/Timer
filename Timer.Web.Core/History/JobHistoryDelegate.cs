@@ -17,10 +17,11 @@ namespace Timer.Web.Core.History
 {
     public class JobHistoryDelegate
     {
-        private static readonly ILog log = LogProvider.For<JobHistoryDelegate>();
+        //private static readonly ILog log = LogProvider.For<JobHistoryDelegate>();
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(AppUtil.LoggerRepository.Name, typeof(JobHistoryDelegate));
         private StdAdoDelegate driverDelegate;
         private readonly string delegateTypeName;
-        private Type delegateType = typeof (StdAdoDelegate);
+        private Type delegateType = typeof(StdAdoDelegate);
         private readonly string tablePrefix;
         private readonly string dataSource;
 
@@ -65,7 +66,7 @@ namespace Timer.Web.Core.History
                                 throw new InvalidConfigurationException("Configured delegate does not have public constructor that takes no arguments");
                             }
 
-                            driverDelegate = (StdAdoDelegate) ctor.Invoke(null);
+                            driverDelegate = (StdAdoDelegate)ctor.Invoke(null);
                             driverDelegate.Initialize(args);
                         }
                         catch (Exception e)

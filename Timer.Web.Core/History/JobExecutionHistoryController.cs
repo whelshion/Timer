@@ -11,7 +11,8 @@ namespace Timer.Web.Core.History
     /// </summary>
     public class JobExecutionHistoryController : Controller
     {
-        private static readonly ILog log = LogProvider.GetLogger(typeof (JobExecutionHistoryController));
+        //private static readonly ILog log = LogProvider.GetLogger(typeof (JobExecutionHistoryController));
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(AppUtil.LoggerRepository.Name, typeof(JobExecutionHistoryController));
 
         [HttpGet]
         [Route("api/schedulers/{schedulerName}/jobs/history")]
@@ -27,7 +28,8 @@ namespace Timer.Web.Core.History
             }
             catch (Exception e)
             {
-                log.ErrorException("Error while retrieving history entries",  e);
+                //log.ErrorException("Error while retrieving history entries", e);
+                log.Error("Error while retrieving history entries", e);
                 errorMessage = e.Message;
             }
             var model = new JobHistoryViewModel(entries, errorMessage);

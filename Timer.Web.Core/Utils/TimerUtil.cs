@@ -4,8 +4,8 @@ using Quartz.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
-using Timer.Job;
 using Timer.Web.Core.Models;
 
 namespace Timer.Web.Core.Utils
@@ -30,7 +30,7 @@ namespace Timer.Web.Core.Utils
 
         public static async Task<IEnumerable<JobTypeVM>> GetJobTypes()
         {
-            var types = typeof(BaseJob).Assembly.GetTypes()
+            var types = Assembly.GetEntryAssembly().GetTypes()
                 .Where(o => typeof(IJob).IsAssignableFrom(o) && !o.IsAbstract && o.IsClass && o.IsPublic)
                 .Select(o => new JobTypeVM
                 {

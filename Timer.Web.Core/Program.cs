@@ -19,17 +19,17 @@ namespace Timer.Web.Core
                 .AddJsonFile("hosting.json", optional: true)
                 .Build();
 
-            BuildWebHost(config, args).Run();
-        }
-
-        public static IWebHost BuildWebHost(IConfigurationRoot config, string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+            var host = new WebHostBuilder()
                 .UseKestrel()
                 .UseConfiguration(config)
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
-                .UseApplicationInsights()
+                //.UseApplicationInsights()
                 .Build();
+
+            host.Run();
+            //BuildWebHost(config, args).Run();
+        }
     }
 }

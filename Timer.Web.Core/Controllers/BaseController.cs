@@ -10,7 +10,8 @@ namespace Timer.Web.Core.Controllers
     {
         public BaseController()
         {
-            Logger = log4net.LogManager.GetLogger(Job.Utils.JdllUtil.LoggerRepository.Name, this.GetType());
+            //Logger = LogProvider.GetLogger(this.GetType());
+            Logger = log4net.LogManager.GetLogger(AppUtil.LoggerRepository.Name, this.GetType());
         }
         internal log4net.ILog Logger { get; }
     }
