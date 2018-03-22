@@ -10,9 +10,9 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Timer.MvcCore.Utils;
+using Timer.ShellExecuter.Utils;
 
-namespace Timer.MvcCore.Jobs
+namespace Timer.ShellExecuter.Jobs
 {
     public class TUQuickAnalysisJob : IJob
     {

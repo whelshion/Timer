@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timer.Web.Core", "Timer.Web
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timer.Job", "Timer.Job\Timer.Job.csproj", "{F6E0C591-4E60-456B-B8CF-F10F0B34BA86}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timer.ShellExecuter", "Timer.ShellExecuter\Timer.ShellExecuter.csproj", "{77B28455-5A48-4CFA-82C6-AF7DB81BC7B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F6E0C591-4E60-456B-B8CF-F10F0B34BA86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6E0C591-4E60-456B-B8CF-F10F0B34BA86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6E0C591-4E60-456B-B8CF-F10F0B34BA86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77B28455-5A48-4CFA-82C6-AF7DB81BC7B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77B28455-5A48-4CFA-82C6-AF7DB81BC7B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77B28455-5A48-4CFA-82C6-AF7DB81BC7B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77B28455-5A48-4CFA-82C6-AF7DB81BC7B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Timer.MvcCore.Utils
+namespace Timer.ShellExecuter.Utils
 {
     public class HttpUtil
     {

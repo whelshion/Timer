@@ -9,7 +9,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Timer.MvcCore
+namespace Timer.ShellExecuter
 {
     class Program
     {

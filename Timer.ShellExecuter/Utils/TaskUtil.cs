@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Timer.MvcCore.Utils
+namespace Timer.ShellExecuter.Utils
 {
     /// <summary>
     /// Internal helpers for working with tasks.

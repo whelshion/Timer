@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Timer.MvcCore
+namespace Timer.ShellExecuter
 {
     public class AppSetting
     {
