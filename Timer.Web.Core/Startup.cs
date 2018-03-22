@@ -29,7 +29,7 @@ namespace Timer.Web.Core
             services.AddCors();
             services.AddMvc();
             services.AddSingleton(Configuration);
-            services.AddSignalR();
+            //services.AddSignalR();
             ConfigureQuartz(services);
         }
 
@@ -51,10 +51,10 @@ namespace Timer.Web.Core
 
             app.UseStaticFiles();
 
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<LiveLogHub>("/live");
-            });
+            //app.UseSignalR(routes =>
+            //{
+            //    routes.MapHub<LiveLogHub>("/live");
+            //});
 
             app.UseCors(builder => builder.AllowAnyMethod().AllowAnyHeader().AllowCredentials());
 
