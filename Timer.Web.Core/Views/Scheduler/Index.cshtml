@@ -34,15 +34,15 @@
                 cssClass = "warning";
                 break;
         }
-<div class="bs-callout bs-callout-@cssClass">
-    <h4>@item.SchedulerName</h4>
-    <p class="pull-left">@status</p>
-    <p class="pull-right"><a data-toggle="tooltip" data-placement="auto top" title="详情" asp-action="Detail" asp-all-route-data="detailRouteData"><span class="glyphicon glyphicon-forward"></span></a></p>
-    @*<p class="pull-right"><a data-toggle="tooltip" data-placement="auto top" title="清除" asp-action="ClearAsync" asp-all-route-data="detailRouteData"><span class="glyphicon glyphicon-forward"></span></a></p>
-        <p class="pull-right"><a data-toggle="tooltip" data-placement="auto top" title="关闭" asp-action="ShutdownAsync" asp-all-route-data="detailRouteData"><span class="glyphicon glyphicon-forward"></span></a></p>*@
-    <p class="pull-right" style="display:@(item.Status==SchedulerStatus.Standby?"none":"block")"><a data-toggle="tooltip" data-placement="auto top" title="搁置" asp-action="StandbyAsync" asp-all-route-data="detailRouteData"><span class="glyphicon glyphicon-pause"></span></a></p>
-    <p class="pull-right" style="display:@(item.Status==SchedulerStatus.Running?"none":"block")"><a data-toggle="tooltip" data-placement="auto top" title="启动" asp-action="StartAsync" asp-all-route-data="detailRouteData"><span class="glyphicon glyphicon-play"></span></a></p>
-</div>
+        <div class="bs-callout bs-callout-@cssClass">
+            <h4>@item.SchedulerName</h4>
+            <p class="pull-left">状态：@status</p>
+            <p class="pull-right"><a data-toggle="tooltip" data-placement="auto top" title="详情" asp-action="Detail" asp-all-route-data="detailRouteData"><span class="glyphicon glyphicon-forward"></span></a></p>
+            @*<p class="pull-right"><a data-toggle="tooltip" data-placement="auto top" title="清除" asp-action="ClearAsync" asp-all-route-data="detailRouteData"><span class="glyphicon glyphicon-forward"></span></a></p>
+                <p class="pull-right"><a data-toggle="tooltip" data-placement="auto top" title="关闭" asp-action="ShutdownAsync" asp-all-route-data="detailRouteData"><span class="glyphicon glyphicon-forward"></span></a></p>*@
+            <p class="pull-right" style="display:@(item.Status==SchedulerStatus.Standby?"none":"block")"><a data-toggle="tooltip" data-placement="auto top" title="搁置" asp-action="StandbyAsync" asp-all-route-data="detailRouteData"><span class="glyphicon glyphicon-pause"></span></a></p>
+            <p class="pull-right" style="display:@(item.Status==SchedulerStatus.Running?"none":"block")"><a data-toggle="tooltip" data-placement="auto top" title="启动" asp-action="StartAsync" asp-all-route-data="detailRouteData"><span class="glyphicon glyphicon-play"></span></a></p>
+        </div>
     }
 }
 

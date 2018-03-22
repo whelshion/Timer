@@ -26,6 +26,7 @@ namespace Timer.Web.Core
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddMvc();
             services.AddSingleton(Configuration);
             services.AddSignalR();
@@ -54,6 +55,8 @@ namespace Timer.Web.Core
             {
                 routes.MapHub<LiveLogHub>("/live");
             });
+
+            app.UseCors(builder => builder.AllowAnyMethod().AllowAnyHeader().AllowCredentials());
 
             app.UseMvc(routes =>
             {
