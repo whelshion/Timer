@@ -25,7 +25,6 @@ namespace Timer.Web.Core.Jobs
         public string AfterShellSql { get; private set; }
         protected override Task ExecuteJob(IJobExecutionContext context)
         {
-            Logger.Info($"******************************新周期触发(线程ID:{Thread.CurrentThread.ManagedThreadId})******************************");
             var dataMap = context.MergedJobDataMap;
 
             ScriptPath = dataMap.GetString("shell-script-path");
@@ -153,7 +152,6 @@ namespace Timer.Web.Core.Jobs
                     IsActive = false;
                 }
             }
-            Logger.Info($"******************************周期结束(线程ID:{Thread.CurrentThread.ManagedThreadId})******************************");
             return TaskUtil.CompletedTask;
         }
     }

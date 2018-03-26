@@ -40,8 +40,8 @@
                     {
                         title = "无配置信息";
                     }
-                    <tr data-toggle="tooltip" data-placement="@arrow" title="@title" data-html="true">
-                        <td>@job.JobName</td>
+                    <tr>
+                        <td><span data-toggle="tooltip" data-placement="auto top" title="@title" data-html="true">@job.JobName</span></td>
                         <td>@job.JobGroup</td>
                         <td>@job.NextFireTimeUtc.GetValueOrDefault().ToString("yyyy-MM-dd HH:mm:ss")</td>
                         <td>@job.Description</td>
