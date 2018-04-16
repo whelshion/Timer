@@ -45,6 +45,12 @@ namespace Timer.Web.Core.Jobs
                 string command = string.Empty;
                 string querySql;
                 long? task_detail_id = 0;
+                string ttime = string.Empty;
+                string thour = string.Empty;
+                string phone_number = string.Empty;
+                string type1 = string.Empty;
+                string type3 = string.Empty;
+
                 try
                 {
                     DbConnection conn;
@@ -76,26 +82,23 @@ namespace Timer.Web.Core.Jobs
 
                                 while (reader.Read())
                                 {
-                                    int i = 0;
+                                    //int i = 0;
                                     task_detail_id = reader.GetInt64(0);
-                                    string type3 = reader.GetString(5);
-                                    int type3Value = type3.Contains("未接通") ? 1 :
-                                        type3.Contains("掉话") ? 2 :
-                                        type3.Contains("切换失败") ? 3 :
-                                        throw new ArgumentException($"TYPE3不在范围内:{type3}");
+                                    ttime = reader.GetString(1);
+                                    thour = reader.GetString(2);
+                                    phone_number = reader.GetString(3);
+                                    type1 = reader.GetString(4);
+                                    type3 = reader.GetString(5);
+                                    int type3Value = type3.Contains("未接通") ? 1 : type3.Contains("掉话") ? 2 : type3.Contains("切换失败") ? 3 : throw new ArgumentOutOfRangeException($"TYPE3不在范围内:{type3}");
 
-                                    Logger.Info($"查询到工单:task_detail_id={reader.GetString(0)},ttime={reader.GetString(1)},thour={reader.GetString(2)},def_cellname={reader.GetString(3)},type1={reader.GetString(4)},type3={type3}");
-                                    arguments = $"{ShellName} {reader.GetString(1)} {reader.GetString(2)} {reader.GetString(3)} {reader.GetString(4)} {type3Value}";
+                                    Logger.Info($"查询到工单task_detail_id:{task_detail_id}  ttime: {ttime}  thour:{thour}  phone_number: {phone_number}  type1: {type1}  type3:{type3}");
+                                    arguments = $"{ShellName} {ttime} {thour} {phone_number} {type1} {type3Value}";
                                     break;
                                 }
                                 conn.Close();
 
-                                //var result = ExecShellCommand(p =>
-                                //{
-                                //    p(command);
-                                //    p("exit 0");
-                                //});
                                 Logger.Info($"--------------开始执行SHELL命令--------------");
+                                //执行shell脚本
                                 Logger.Info($"/bin/bash {arguments}");
                                 var result = ShellUtil.ExecuteCommand("/bin/bash", arguments, null);
                                 Logger.Info($"--------------执行SHELL命令完成--------------");
@@ -103,7 +106,7 @@ namespace Timer.Web.Core.Jobs
                                 if (!string.IsNullOrEmpty(AfterShellSql))
                                 {
                                     conn.Open();
-                                    cmd.CommandText = AfterShellSql;
+                                    cmd.CommandText = AfterShellSql.Replace("@select_date", ttime);//替换日期占位符
                                     try
                                     {
                                         var asqResult = cmd.ExecuteNonQuery();
@@ -113,7 +116,11 @@ namespace Timer.Web.Core.Jobs
                                     conn.Close();
                                 }
 
+                                //生成工单结果 并更新reply为1002
+                                //NoticeApi2 : http://120.76.26.161/api/WorkorderService/BuildCellQuestion
                                 HttpUtil.HttpGet(NoticeApi2 + $"?task_detail_id={task_detail_id}", timeout: 60);
+
+                                //通知网优专家系统网站已经该工单已经处理完毕
 
                                 while (true)
                                 {
@@ -124,7 +131,9 @@ namespace Timer.Web.Core.Jobs
                                     if (analysisResult != "1001")
                                     {
                                         IsActive = false;
-                                        Logger.Info("通知专家系统:" + HttpUtil.HttpGet(NoticeApi + $"?id={task_detail_id}", timeout: 60));
+                                        //NoticeApi : http://120.76.26.161/TaskManagement/OnTuAnalysisFinished
+                                        if (task_detail_id.GetValueOrDefault() != 0)
+                                            Logger.Info("通知专家系统:" + HttpUtil.HttpGet(NoticeApi + $"?id={task_detail_id}", timeout: 60));
                                         break;
                                     }
                                     Thread.Sleep(1000);
@@ -138,7 +147,8 @@ namespace Timer.Web.Core.Jobs
                         finally
                         {
                             conn.Close();
-                            Logger.Info("通知专家系统:" + HttpUtil.HttpGet(NoticeApi + $"?id={task_detail_id}", timeout: 60));
+                            if (task_detail_id.GetValueOrDefault() != 0)
+                                Logger.Info("通知专家系统:" + HttpUtil.HttpGet(NoticeApi + $"?id={task_detail_id}", timeout: 60));
                         }
                         //Thread.Sleep(10*1000);//测试存在执行中任务
                     }
