@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="cfgs\**" />
+    <Content Remove="cfgs\**" />
+    <EmbeddedResource Remove="cfgs\**" />
+    <None Remove="cfgs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="log4net.config" />
     <Content Remove="quartz_jobs.config" />
   </ItemGroup>
