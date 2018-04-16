@@ -50,6 +50,12 @@ namespace Timer.ShellExecuter.Jobs
                 string command = string.Empty;
                 string querySql;
                 long? task_detail_id = 0;
+                string ttime = string.Empty;
+                string thour = string.Empty;
+                string phone_number = string.Empty;
+                string type1 = string.Empty;
+                string type3 = string.Empty;
+
                 try
                 {
                     DbConnection conn;
@@ -83,39 +89,29 @@ namespace Timer.ShellExecuter.Jobs
                                 {
                                     int i = 0;
                                     task_detail_id = reader.GetInt64(0);
-                                    //command = File.ReadAllTextAsync(ScriptPath).Result
-                                    //    .Replace("{ttime}", reader.GetString(i++))
-                                    //    .Replace("{thour}", reader.GetString(i++))
-                                    //    .Replace("{phone}", reader.GetString(i++))
-                                    //    .Replace("{type1}", reader.GetString(i++))
-                                    //    .Replace("{type3}", reader.GetString(i++))
-                                    //    ;
-                                    string type3 = reader.GetString(5);
-                                    int type3Value = type3.Contains("未接通") ? 1 :
-                                        type3.Contains("掉话") ? 2 :
-                                        type3.Contains("切换失败") ? 3 :
-                                        throw new ArgumentException($"TYPE3不在范围内:{type3}");
+                                    ttime = reader.GetString(1);
+                                    thour = reader.GetString(2);
+                                    phone_number = reader.GetString(3);
+                                    type1 = reader.GetString(4);
+                                    type3 = reader.GetString(5);
+                                    int type3Value = type3.Contains("未接通") ? 1 : type3.Contains("掉话") ? 2 : type3.Contains("切换失败") ? 3 : throw new ArgumentException($"TYPE3不在范围内:{type3}");
 
-                                    log.Info($"查询到工单:{reader.GetString(0)} {reader.GetString(1)} {reader.GetString(2)} {reader.GetString(3)} {reader.GetString(4)} {type3}");
-                                    arguments = $"{ShellName} {reader.GetString(1)} {reader.GetString(2)} {reader.GetString(3)} {reader.GetString(4)} {type3Value}";
+                                    log.Info($"查询到工单task_detail_id:{task_detail_id}  ttime: {ttime}  thour:{thour}  phone_number: {phone_number}  type1: {type1}  type3:{type3}");
+                                    arguments = $"{ShellName} {ttime} {thour} {phone_number} {type1} {type3Value}";
                                     break;
                                 }
                                 conn.Close();
 
-                                //var result = ExecShellCommand(p =>
-                                //{
-                                //    p(command);
-                                //    p("exit 0");
-                                //});
-                                var result = ExecuteCommand("/bin/bash", arguments, null);
-                                //string message = result ? "成功" : "失败";
-                                //log.Info($@"[SHELL结果]-- {message}");
 
+                                //执行shell脚本
+                                var result = ExecuteCommand("/bin/bash", arguments, null);
+
+                                //执行sql脚本
                                 log.Info($"[AfterShellSql:]-- {AfterShellSql}");
                                 if (!string.IsNullOrEmpty(AfterShellSql))
                                 {
                                     conn.Open();
-                                    cmd.CommandText = AfterShellSql;
+                                    cmd.CommandText = AfterShellSql.Replace("@select_date", ttime);//替换日期占位符
                                     try
                                     {
                                         log.Info(cmd.ExecuteNonQuery());
@@ -124,8 +120,11 @@ namespace Timer.ShellExecuter.Jobs
                                     conn.Close();
                                 }
 
+                                //生成工单结果 并更新reply为1002
+                                //NoticeApi2 : http://120.76.26.161/api/WorkorderService/BuildCellQuestion
                                 HttpUtil.HttpGet(NoticeApi2 + $"?task_detail_id={task_detail_id}", timeout: 60);
 
+                                //通知网优专家系统网站已经该工单已经处理完毕
                                 while (true)
                                 {
                                     conn.Open();
@@ -135,6 +134,7 @@ namespace Timer.ShellExecuter.Jobs
                                     if (analysisResult != "1001")
                                     {
                                         IsActive = false;
+                                        //NoticeApi : http://120.76.26.161/TaskManagement/OnTuAnalysisFinished
                                         log.Info("通知专家系统:" + HttpUtil.HttpGet(NoticeApi + $"?id={task_detail_id}", timeout: 60));
                                         break;
                                     }
