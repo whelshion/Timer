@@ -23,8 +23,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //===============================================================================
-
-// ReSharper disable PossibleNullReferenceException
+   
+// ReSharper disable PossibleNullR  eferenceException
 
 // Define LIBLOG_PORTABLE conditional compilation symbol for PCL compatibility
 //
