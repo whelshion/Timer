@@ -22,6 +22,8 @@ namespace Timer.Web.Core.Jobs
         public string ShellName { get; private set; }
         public string NoticeApi { get; private set; }
         public string NoticeApi2 { get; private set; }
+        public string BeforeShellSql { get; private set; }
+
         public string AfterShellSql { get; private set; }
         protected override Task ExecuteJob(IJobExecutionContext context)
         {
@@ -34,6 +36,7 @@ namespace Timer.Web.Core.Jobs
             NoticeApi = dataMap.GetString("notice-api") ?? "";
             NoticeApi2 = dataMap.GetString("notice-api-2") ?? "";
             AfterShellSql = dataMap.GetString("after-shell-sql") ?? "";
+            BeforeShellSql = dataMap.GetString("before-shell-sql") ?? "";
 
             if (IsActive)
             {
@@ -58,7 +61,7 @@ namespace Timer.Web.Core.Jobs
                     {
                         case "MsSql":
                             conn = new SqlConnection(DbConnString);
-                            querySql = @"select top 1 task_detail_id,ttime,thour,def_cellname,type1,type3 from manager_task_detail where reply='1001' limit 1";
+                            querySql = @"select top 1 task_detail_id,ttime,thour,def_cellname,type1,type3 from manager_task_detail where reply='1001' ";
                             break;
                         default:
                             conn = new MySqlConnection(DbConnString);
@@ -96,6 +99,21 @@ namespace Timer.Web.Core.Jobs
                                     break;
                                 }
                                 conn.Close();
+
+
+                                if (!string.IsNullOrEmpty(BeforeShellSql))
+                                {
+                                    conn.Open();
+                                    cmd.CommandText = BeforeShellSql.Replace("@select_date", ttime);//替换日期占位符
+                                    try
+                                    {
+                                        var asqResult = cmd.ExecuteNonQuery();
+                                        Logger.Info($" {asqResult} 行受影响");
+                                    }
+                                    catch { }
+                                    conn.Close();
+                                }
+
 
                                 Logger.Info($"--------------开始执行SHELL命令--------------");
                                 //执行shell脚本
