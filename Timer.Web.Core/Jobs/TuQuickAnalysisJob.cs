@@ -54,6 +54,7 @@ namespace Timer.Web.Core.Jobs
                 string type1 = string.Empty;
                 string type3 = string.Empty;
 
+                // Logger.Info($"任务数据--{Environment.NewLine}ShellName={ShellName}{Environment.NewLine}ScriptPath={ScriptPath}{Environment.NewLine}DbType={DbType}{Environment.NewLine}DbConnString={DbConnString}{Environment.NewLine}BeforeShellSql={BeforeShellSql}{Environment.NewLine}AfterShellSql={AfterShellSql}{Environment.NewLine}NoticeApi={NoticeApi}{Environment.NewLine}NoticeApi2={NoticeApi2}");
                 try
                 {
                     DbConnection conn;
