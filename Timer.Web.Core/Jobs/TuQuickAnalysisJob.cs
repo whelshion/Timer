@@ -137,25 +137,19 @@ namespace Timer.Web.Core.Jobs
 
                                 //生成工单结果 并更新reply为1002
                                 //NoticeApi2 : http://120.76.26.161/api/WorkorderService/BuildCellQuestion
-                                HttpUtil.HttpGet(NoticeApi2 + $"?task_detail_id={task_detail_id}", timeout: 60);
 
-                                //通知网优专家系统网站已经该工单已经处理完毕
-
-                                while (true)
+                                Logger.Info("生成工单结果:" + HttpUtil.HttpGet(NoticeApi2 + $"?task_detail_id={task_detail_id}", timeout: 60));
+                                //通知专家系统网站该工单已经处理完毕
+                                //10秒/次*30次无结果则跳过，直接通知专家系统
+                                int i = 0;
+                                while (i++ < 30)
                                 {
                                     conn.Open();
                                     cmd.CommandText = $"select reply from manager_task_detail where task_detail_id={task_detail_id}";
                                     string analysisResult = (string)cmd.ExecuteScalar();
                                     conn.Close();
-                                    if (analysisResult != "1001")
-                                    {
-                                        IsActive = false;
-                                        //NoticeApi : http://120.76.26.161/TaskManagement/OnTuAnalysisFinished
-                                        if (task_detail_id.GetValueOrDefault() != 0)
-                                            Logger.Info("通知专家系统:" + HttpUtil.HttpGet(NoticeApi + $"?id={task_detail_id}", timeout: 60));
-                                        break;
-                                    }
-                                    Thread.Sleep(1000);
+                                    if (analysisResult != "1001") break;
+                                    Thread.Sleep(1000 * 10);
                                 }
                             }
                         }
@@ -166,6 +160,7 @@ namespace Timer.Web.Core.Jobs
                         finally
                         {
                             conn.Close();
+                            //NoticeApi : http://120.76.26.161:5000/TaskManagement/OnTuAnalysisFinished
                             if (task_detail_id.GetValueOrDefault() != 0)
                                 Logger.Info("通知专家系统:" + HttpUtil.HttpGet(NoticeApi + $"?id={task_detail_id}", timeout: 60));
                         }
