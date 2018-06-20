@@ -93,9 +93,9 @@ namespace Timer.Web.Core.Jobs
                                     phone_number = reader.GetString(3);
                                     type1 = reader.GetString(4);
                                     type3 = reader.GetString(5);
-                                    int type3Value = type3.Contains("未接通") ? 1 : type3.Contains("掉话") ? 2 : type3.Contains("切换失败") ? 3 : throw new ArgumentOutOfRangeException($"TYPE3不在范围内:{type3}");
+                                    int type3Value = type3.Contains("未接通") ? 1 : type3.Contains("掉话") ? 2 : type3.ToUpper().Contains("ESRVCC切换失败") ? 4 : type3.Contains("切换失败") ? 3 : throw new ArgumentOutOfRangeException($"TYPE3不在范围内:{type3}");
 
-                                    Logger.Info($"查询到工单task_detail_id:{task_detail_id}  ttime: {ttime}  thour:{thour}  phone_number: {phone_number}  type1: {type1}  type3:{type3}");
+                                    Logger.Info($"查询到工单{{task_detail_id:{task_detail_id},ttime:{ttime},thour:{thour},phone_number:{phone_number},type1:{type1},type3:{type3}}}");
                                     arguments = $"{ShellName} {ttime} {thour} {phone_number} {type1} {type3Value}";
                                     break;
                                 }
