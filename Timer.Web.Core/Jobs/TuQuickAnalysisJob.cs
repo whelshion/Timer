@@ -136,7 +136,7 @@ namespace Timer.Web.Core.Jobs
                                 }
 
                                 //生成工单结果 并更新reply为1002
-                                //NoticeApi2 : http://120.76.26.161/api/WorkorderService/BuildCellQuestion
+                                //NoticeApi2 : http://120.76.26.161:5000/api/WorkorderService/BuildCellQuestion
 
                                 Logger.Info("生成工单结果:" + HttpUtil.HttpGet(NoticeApi2 + $"?task_detail_id={task_detail_id}", timeout: 60));
                                 //通知专家系统网站该工单已经处理完毕
