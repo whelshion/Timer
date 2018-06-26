@@ -125,7 +125,7 @@ namespace Timer.Web.Core.Jobs
                                 if (!string.IsNullOrEmpty(AfterShellSql))
                                 {
                                     conn.Open();
-                                    cmd.CommandText = AfterShellSql.Replace("@select_date", ttime);//替换日期占位符
+                                    cmd.CommandText = AfterShellSql.Replace("@select_date", ttime).Replace("@select_hour",thour);//替换日期占位符
                                     try
                                     {
                                         var asqResult = cmd.ExecuteNonQuery();
