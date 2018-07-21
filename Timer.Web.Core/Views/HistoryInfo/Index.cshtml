@@ -1,0 +1,46 @@
+﻿@model List<Timer.Web.Core.TableEntity.SingleUserAnalysisHistoryInfo>
+
+@{
+    ViewData["Title"] = "任务执行详情";
+}
+<h2>任务执行详情 <small>任务执行详情</small></h2>
+
+ 
+ 
+    <div class="panel panel-default"> 
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>task_detail_id</th>
+                    <th>步骤编号</th>
+                    <th>步骤名称</th>
+                    <th>步骤备注</th>
+                    <th>运行状态</th>
+                    <th>耗时（秒）</th>
+                    <th>异常信息</th>
+                    <th>本记录创建时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var job in Model)
+                { 
+                <tr>
+                    <td>@job.task_detail_id</td>
+                    <td>@job.step_no</td>
+                    <td>@job.step_name</td>
+                    <td>@job.step_remark</td>
+                    <td>@job.run_status</td>
+                    <td>@job.spend_time</td>
+                    <td>@job.error_msg</td>  
+                    <td>@job.col_create_time.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div> 
+@section Scripts{
+  
+    <script>
+         
+    </script>
+}

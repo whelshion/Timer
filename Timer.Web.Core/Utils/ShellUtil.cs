@@ -90,8 +90,22 @@ namespace Timer.Web.Core.Utils
 
                     process.StartInfo.CreateNoWindow = true;
 
-                    process.OutputDataReceived += (sender, e) => Logger.Info(e.Data ?? "Output:-");
-                    process.ErrorDataReceived += (sender, e) => Logger.Error(e.Data ?? "Error:-");
+                    process.OutputDataReceived += (sender, e) =>
+                    {
+                        Logger.Info(e.Data ?? "Output:-");
+                        if (e.Data.IndexOf("FAILED:") > -1)
+                        {
+                            result = false;
+                        }
+                    };
+                    process.ErrorDataReceived += (sender, e) =>
+                    {
+                        Logger.Error(e.Data ?? "Error:-");
+                        if (e.Data.IndexOf("FAILED:") > -1)
+                        {
+                            result = false;
+                        }
+                    };
 
                     process.Start();
                     process.BeginOutputReadLine();

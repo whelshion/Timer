@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -9,6 +10,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MySql.Data.MySqlClient;
+using PetaPoco.NetCore;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Impl.Calendar;
@@ -31,6 +34,22 @@ namespace Timer.Web.Core
             services.AddCors();
             services.AddMvc();
             services.AddSingleton(Configuration);
+
+            var dbType = Configuration.GetValue<string>("DbType");
+            var connectionStr = Configuration.GetValue<string>("ConnectionString");
+
+            switch (dbType)
+            {
+                case "MsSql":
+                    services.AddSingleton(new Database(new SqlConnection(connectionStr)));
+                    break;
+                default:
+                    services.AddSingleton(new Database(new MySqlConnection(connectionStr)));
+                    break;
+            }
+
+
+
             //services.AddSignalR();
             ConfigureQuartz(services);
         }
