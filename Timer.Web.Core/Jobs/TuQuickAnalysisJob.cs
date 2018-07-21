@@ -115,7 +115,7 @@ namespace Timer.Web.Core.Jobs
 
                                     ShellName.Split(";").ToList().ForEach(shell =>
                                     {
-                                        arguments.Add($"{ShellName} {ttime} {thour} {phone_number} {type1} {type3Value}");
+                                        arguments.Add($"{shell} {ttime} {thour} {phone_number} {type1} {type3Value}");
                                     });
 
                                     break;
