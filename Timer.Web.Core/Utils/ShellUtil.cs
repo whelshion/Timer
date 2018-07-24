@@ -93,17 +93,23 @@ namespace Timer.Web.Core.Utils
                     process.OutputDataReceived += (sender, e) =>
                     {
                         Logger.Info(e.Data ?? "Output:-");
-                        if (e.Data.IndexOf("FAILED:") > -1)
+                        if (e.Data != null)
                         {
-                            result = false;
+                            if (e.Data.IndexOf("FAILED:") > -1)
+                            {
+                                result = false;
+                            }
                         }
                     };
                     process.ErrorDataReceived += (sender, e) =>
                     {
                         Logger.Error(e.Data ?? "Error:-");
-                        if (e.Data.IndexOf("FAILED:") > -1)
+                        if (e.Data != null)
                         {
-                            result = false;
+                            if (e.Data.IndexOf("FAILED:") > -1)
+                            {
+                                result = false;
+                            }
                         }
                     };
 
