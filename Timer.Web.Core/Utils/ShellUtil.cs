@@ -71,9 +71,10 @@ namespace Timer.Web.Core.Utils
         /// <param name="workingDirectory">工作路径</param>
         /// <param name="wait">是否等待命令执行完成</param>
         /// <returns></returns>
-        public static bool ExecuteCommand(string fileName, string arguments, string workingDirectory, bool wait = true)
+        public static Tuple<bool, string> ExecuteCommand(string fileName, string arguments, string workingDirectory, bool wait = true)
         {
             bool result = true;
+            string error_msg = "";
             try
             {
                 Logger.Info("ExecuteCommand:" + fileName + " " + arguments);
@@ -98,6 +99,7 @@ namespace Timer.Web.Core.Utils
                             if (e.Data.IndexOf("FAILED:") > -1)
                             {
                                 result = false;
+                                error_msg = e.Data;
                             }
                         }
                     };
@@ -109,6 +111,7 @@ namespace Timer.Web.Core.Utils
                             if (e.Data.IndexOf("FAILED:") > -1)
                             {
                                 result = false;
+                                error_msg = e.Data;
                             }
                         }
                     };
@@ -124,8 +127,9 @@ namespace Timer.Web.Core.Utils
             {
                 result = false;
                 Logger.Error(ex.ToString());
+                error_msg = ex.Message;
             }
-            return result;
+            return new Tuple<bool, string>(result, error_msg);
         }
     }
 }

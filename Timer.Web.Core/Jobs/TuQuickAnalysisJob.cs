@@ -190,7 +190,7 @@ namespace Timer.Web.Core.Jobs
 
                                     stopwatch.Stop();//计时器停止
                                     step_2.run_status = RunStatus.已执行.ToString();
-                                    step_2.step_remark += "执行结果：" + (result == true ? "无错误" : "有错误，请查看日志文件");
+                                    step_2.step_remark += "执行结果：" + (result.Item1 == true ? "无错误" : string.Concat("有错误,", result.Item2));
                                     step_2.spend_time = (int)stopwatch.Elapsed.TotalSeconds;
                                     logService.Update(step_2);
                                 });
