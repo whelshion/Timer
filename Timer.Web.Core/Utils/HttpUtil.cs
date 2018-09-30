@@ -58,7 +58,7 @@ namespace Timer.Web.Core.Utils
                     client.Timeout = new TimeSpan(0, 0, timeout);
                 }
                 Byte[] resultBytes = await client.GetByteArrayAsync(url);
-                return Encoding.Default.GetString(resultBytes);
+                return Encoding.UTF8.GetString(resultBytes);
             }
         }
 
