@@ -28,7 +28,7 @@ namespace Timer.ApiCaller.Utils
                 }
                 if (timeout > 0)
                 {
-                    client.Timeout = new TimeSpan(0, 0, timeout);
+                    client.Timeout = TimeSpan.FromSeconds(timeout);
                 }
                 Byte[] resultBytes = client.GetByteArrayAsync(url).Result;
                 return Encoding.UTF8.GetString(resultBytes);
@@ -55,7 +55,7 @@ namespace Timer.ApiCaller.Utils
                 }
                 if (timeout > 0)
                 {
-                    client.Timeout = new TimeSpan(0, 0, timeout);
+                    client.Timeout = TimeSpan.FromSeconds(timeout);
                 }
                 Byte[] resultBytes = await client.GetByteArrayAsync(url);
                 return Encoding.Default.GetString(resultBytes);
@@ -85,7 +85,7 @@ namespace Timer.ApiCaller.Utils
                 }
                 if (timeout > 0)
                 {
-                    client.Timeout = new TimeSpan(0, 0, timeout);
+                    client.Timeout = TimeSpan.FromSeconds(timeout);
                 }
                 using (HttpContent content = new StringContent(postData ?? "", encoding ?? Encoding.UTF8))
                 {
@@ -125,7 +125,7 @@ namespace Timer.ApiCaller.Utils
                 }
                 if (timeout > 0)
                 {
-                    client.Timeout = new TimeSpan(0, 0, timeout);
+                    client.Timeout = TimeSpan.FromSeconds(timeout);
                 }
                 using (HttpContent content = new StringContent(postData ?? "", encoding ?? Encoding.UTF8))
                 {

@@ -20,7 +20,7 @@ namespace Timer.ApiCaller.Jobs
                 var dataMap = context.MergedJobDataMap;
                 Url = dataMap.GetString("url");
                 Query = dataMap.GetString("query");
-                var result = HttpUtil.HttpGetAsync(Url + Query).Result;
+                var result = HttpUtil.HttpGetAsync(Url + Query).ConfigureAwait(false).GetAwaiter().GetResult();
                 log.Info($"[接口]-- {Url + Query}");
                 log.Info($"[结果]-- {Environment.NewLine}{result}");
             }
